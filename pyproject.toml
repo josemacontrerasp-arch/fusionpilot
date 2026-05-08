@@ -1,0 +1,25 @@
+[project]
+name = "fusionpilot"
+version = "0.1.0"
+description = "Educational 0D fusion-plasma control simulator with RL-ready hooks."
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+plot = [
+  "matplotlib>=3.7",
+]
+rl = [
+  "gymnasium>=0.29",
+  "stable-baselines3>=2.3",
+]
+dev = [
+  "matplotlib>=3.7",
+  "pytest>=8.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

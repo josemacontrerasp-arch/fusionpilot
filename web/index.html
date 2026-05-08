@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FusionPilot · plasma control demo</title>
+  <meta name="theme-color" content="#05070d" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='12'%20fill='%2305070d'/%3E%3Cellipse%20cx='32'%20cy='32'%20rx='23'%20ry='9'%20transform='rotate(-24%2032%2032)'%20fill='none'%20stroke='%237fe7ff'%20stroke-width='4'/%3E%3Cellipse%20cx='32'%20cy='32'%20rx='23'%20ry='9'%20transform='rotate(24%2032%2032)'%20fill='none'%20stroke='%23bff5ff'%20stroke-opacity='.62'%20stroke-width='3'/%3E%3Ccircle%20cx='32'%20cy='32'%20r='3.5'%20fill='%23eaffff'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.165.0/build/three.module.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg class="brand-mark" viewBox="0 0 48 48" focusable="false">
+          <ellipse class="mark-orbit mark-orbit-a" cx="24" cy="24" rx="18.5" ry="7.25" transform="rotate(-24 24 24)" />
+          <ellipse class="mark-orbit mark-orbit-b" cx="24" cy="24" rx="18.5" ry="7.25" transform="rotate(24 24 24)" />
+          <path class="mark-field" d="M9.5 24c3.3-5.4 8.1-8.1 14.5-8.1S35.2 18.6 38.5 24C35.2 29.4 30.4 32.1 24 32.1S12.8 29.4 9.5 24Z" />
+          <circle class="mark-core" cx="24" cy="24" r="2.4" />
+        </svg>
+      </div>
+      <div>
+        <h1><span class="brand-main">FUSION</span><span class="brand-accent">PILOT</span></h1>
+        <p class="tagline">0D PLASMA-CONTROL DEMO · RL AGENT VS HUMAN</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <nav class="modes" aria-label="Demo modes">
+        <button data-mode="learn" class="active">
+          <span class="mode-num">01</span>
+          <span class="mode-name">Learn</span>
+        </button>
+        <button data-mode="operator">
+          <span class="mode-num">02</span>
+          <span class="mode-name">Operator</span>
+        </button>
+        <button data-mode="race">
+          <span class="mode-num">03</span>
+          <span class="mode-name">AI vs You</span>
+        </button>
+      </nav>
+      <div class="settings-menu">
+        <button class="icon-button" type="button" data-action="settings-toggle" aria-label="Difficulty settings" aria-expanded="false" aria-controls="settings-panel">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 8.2a3.8 3.8 0 1 1 0 7.6 3.8 3.8 0 0 1 0-7.6Z" />
+            <path d="M19.1 13.4c.1-.5.1-.9.1-1.4s0-.9-.1-1.4l2-1.5-2-3.5-2.4 1a7.7 7.7 0 0 0-2.4-1.4L14 2.6h-4l-.4 2.6a7.7 7.7 0 0 0-2.4 1.4l-2.4-1-2 3.5 2 1.5c-.1.5-.1.9-.1 1.4s0 .9.1 1.4l-2 1.5 2 3.5 2.4-1a7.7 7.7 0 0 0 2.4 1.4l.4 2.6h4l.4-2.6a7.7 7.7 0 0 0 2.4-1.4l2.4 1 2-3.5-2.1-1.5Z" />
+          </svg>
+        </button>
+        <div class="settings-popover" id="settings-panel" data-settings-panel hidden>
+          <div class="settings-title">Reactor Scenario</div>
+          <div class="scenario-control">
+            <div class="scenario-buttons" role="group" aria-label="Reactor scenario">
+              <button type="button" data-scenario="standard" class="active" aria-pressed="true">Standard</button>
+              <button type="button" data-scenario="compact">Compact</button>
+              <button type="button" data-scenario="heavy">Heavy</button>
+              <button type="button" data-scenario="storm">Storm</button>
+              <button type="button" data-scenario="precision">Precision</button>
+            </div>
+            <p class="scenario-description" data-scenario-description>Balanced reactor. Default response time, default disturbance weather.</p>
+          </div>
+          <div class="settings-title">Challenge Difficulty</div>
+          <div class="difficulty-control" data-difficulty-group="operator">
+            <span>Operator</span>
+            <div class="difficulty-buttons" role="group" aria-label="Operator difficulty">
+              <button type="button" data-difficulty="easy">Easy</button>
+              <button type="button" data-difficulty="normal" class="active" aria-pressed="true">Normal</button>
+              <button type="button" data-difficulty="hard">Hard</button>
+            </div>
+          </div>
+          <div class="difficulty-control" data-difficulty-group="race">
+            <span>Race</span>
+            <div class="difficulty-buttons" role="group" aria-label="Race difficulty">
+              <button type="button" data-difficulty="easy">Easy</button>
+              <button type="button" data-difficulty="normal" class="active" aria-pressed="true">Normal</button>
+              <button type="button" data-difficulty="hard">Hard</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Mode 1: Learn -->
+    <section id="mode-learn" class="mode active">
+      <div class="explainer">
+        <h2><span class="muted">Mode 01 ·</span> Learn the Plasma</h2>
+        <p>
+          Two actuators, one toy plasma. Heating raises temperature; fueling raises density.
+          Watch the particle field respond. Disturbances are gentle — explore freely.
+        </p>
+        <div class="scenario-chip" data-scenario-chip>
+          <span>SCENARIO</span>
+          <strong>Standard tokamak — balanced response.</strong>
+        </div>
+      </div>
+      <div class="grid two-col">
+        <div class="canvas-card hero-canvas">
+          <div class="canvas-frame">
+            <canvas data-canvas="learn"></canvas>
+            <div class="hud" data-hud="learn">
+              <div class="hud-row"><span class="hud-key">T</span><span class="hud-val" data-hud-key="T">—</span><span class="hud-unit">keV</span></div>
+              <div class="hud-row"><span class="hud-key">n</span><span class="hud-val" data-hud-key="n">—</span><span class="hud-unit">×10²⁰ m⁻³</span></div>
+              <div class="hud-row"><span class="hud-key">P_fus</span><span class="hud-val" data-hud-key="P">—</span><span class="hud-unit">MW</span></div>
+              <div class="hud-row"><span class="hud-key">stab</span><span class="hud-val" data-hud-key="S">—</span><span class="hud-unit">%</span></div>
+            </div>
+            <div class="status-banner" data-status="learn">Stable plasma</div>
+          </div>
+        </div>
+        <div class="controls glass">
+          <h3 class="panel-title">Actuators</h3>
+          <div class="slider-row">
+            <label>Heating power <span data-readout="heat-learn">95 MW</span></label>
+            <input type="range" data-slider="heat-learn" min="0" max="220" value="95" step="1" />
+          </div>
+          <div class="slider-row">
+            <label>Fueling rate <span data-readout="fuel-learn">4.0e19</span></label>
+            <input type="range" data-slider="fuel-learn" min="0" max="150" value="40" step="1" />
+          </div>
+          <div class="toggle-row">
+            <label class="switch"><input type="checkbox" data-toggle="disturb-learn" checked /><span>Disturbances on</span></label>
+            <button data-action="reset-learn" class="ghost">Reset</button>
+          </div>
+          <h3 class="panel-title">Diagnostics</h3>
+          <div class="gauges" data-gauges="learn"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mode 2: Operator challenge -->
+    <section id="mode-operator" class="mode">
+      <div class="explainer">
+        <h2><span class="muted">Mode 02 ·</span> Operator Challenge</h2>
+        <p>
+          ELMs and pumpouts firing every second. Survive the round. Use
+          <kbd>W</kbd>/<kbd>S</kbd> heat, <kbd>A</kbd>/<kbd>D</kbd> fuel,
+          <kbd>R</kbd> reset.
+        </p>
+        <div class="scenario-chip" data-scenario-chip>
+          <span>SCENARIO</span>
+          <strong>Standard tokamak — balanced response.</strong>
+        </div>
+      </div>
+      <div class="grid two-col">
+        <div class="canvas-card hero-canvas">
+          <div class="canvas-frame">
+            <canvas data-canvas="operator"></canvas>
+            <div class="hud" data-hud="operator">
+              <div class="hud-row"><span class="hud-key">T</span><span class="hud-val" data-hud-key="T">—</span><span class="hud-unit">keV</span></div>
+              <div class="hud-row"><span class="hud-key">n</span><span class="hud-val" data-hud-key="n">—</span><span class="hud-unit">×10²⁰ m⁻³</span></div>
+              <div class="hud-row"><span class="hud-key">P_fus</span><span class="hud-val" data-hud-key="P">—</span><span class="hud-unit">MW</span></div>
+              <div class="hud-row"><span class="hud-key">stab</span><span class="hud-val" data-hud-key="S">—</span><span class="hud-unit">%</span></div>
+            </div>
+            <div class="status-banner" data-status="operator">Stable plasma</div>
+            <div class="timer-overlay">
+              <span class="timer-label">SURVIVAL</span>
+              <span class="timer big" data-timer="operator">0.00 s</span>
+            </div>
+          </div>
+        </div>
+        <div class="controls glass">
+          <h3 class="panel-title">Actuators</h3>
+          <div class="slider-row">
+            <label>Heating power <span data-readout="heat-operator">95 MW</span></label>
+            <input type="range" data-slider="heat-operator" min="0" max="220" value="95" step="1" />
+          </div>
+          <div class="slider-row">
+            <label>Fueling rate <span data-readout="fuel-operator">4.0e19</span></label>
+            <input type="range" data-slider="fuel-operator" min="0" max="150" value="40" step="1" />
+          </div>
+          <button data-action="reset-operator">Reset run</button>
+          <div class="race-event" data-operator-event>
+            <span>OPERATOR LOAD</span>
+            <strong>actuator drift armed</strong>
+          </div>
+          <div class="failure-analysis" data-analysis="operator">
+            <span>POST-RUN THEORY</span>
+            <strong>Disrupt the plasma to see why it failed.</strong>
+            <p>The analysis uses temperature, density, stability limits, disturbances, and actuator settings from the final state.</p>
+          </div>
+          <h3 class="panel-title">Diagnostics</h3>
+          <div class="gauges" data-gauges="operator"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mode 3: AI vs You race -->
+    <section id="mode-race" class="mode">
+      <div class="explainer">
+        <h2><span class="muted">Mode 03 ·</span> AI vs You</h2>
+        <p>
+          Same disturbance schedule on both sides. Pick the recorded policy.
+          The <em>trained</em> slot uses the exported SAC actor in the live race,
+          with JSON metrics shown as a reference summary.
+        </p>
+        <div class="scenario-chip" data-scenario-chip>
+          <span>SCENARIO</span>
+          <strong>Standard tokamak — balanced response.</strong>
+        </div>
+        <div class="agent-picker">
+          <label>AI policy</label>
+          <select data-select="agent">
+            <option value="trained_agent" selected>trained SAC</option>
+            <option value="rule_based_agent">rule-based</option>
+            <option value="constant_agent">constant</option>
+            <option value="random_agent">random</option>
+          </select>
+          <span class="agent-meta" data-agent-meta>—</span>
+        </div>
+      </div>
+      <div class="grid two-col">
+        <div class="canvas-card hero-canvas">
+          <h3 class="panel-corner">YOU</h3>
+          <div class="canvas-frame">
+            <canvas data-canvas="race-human"></canvas>
+            <div class="hud" data-hud="race-human">
+              <div class="hud-row"><span class="hud-key">T</span><span class="hud-val" data-hud-key="T">—</span><span class="hud-unit">keV</span></div>
+              <div class="hud-row"><span class="hud-key">n</span><span class="hud-val" data-hud-key="n">—</span><span class="hud-unit">×10²⁰ m⁻³</span></div>
+              <div class="hud-row"><span class="hud-key">P_fus</span><span class="hud-val" data-hud-key="P">—</span><span class="hud-unit">MW</span></div>
+            </div>
+            <div class="status-banner" data-status="race-human">Stable plasma</div>
+            <div class="timer-overlay small">
+              <span class="timer-label">survival</span>
+              <span class="timer" data-timer="race-human">0.00 s</span>
+              <span class="timer-label">reward</span>
+              <span class="timer accent" data-reward="race-human">0.0</span>
+            </div>
+          </div>
+          <div class="race-controls">
+            <div class="slider-row">
+              <label>Heating <span data-readout="heat-race">95 MW</span></label>
+              <input type="range" data-slider="heat-race" min="0" max="220" value="95" step="1" />
+            </div>
+            <div class="slider-row">
+              <label>Fueling <span data-readout="fuel-race">4.0e19</span></label>
+              <input type="range" data-slider="fuel-race" min="0" max="150" value="40" step="1" />
+            </div>
+            <div class="race-event" data-race-event>
+              <span>MANUAL LOAD</span>
+              <strong>waiting for race start</strong>
+            </div>
+            <div class="failure-analysis compact" data-analysis="race-human">
+              <span>POST-RUN THEORY</span>
+              <strong>Race failure analysis will appear here.</strong>
+            </div>
+          </div>
+        </div>
+        <div class="canvas-card hero-canvas">
+          <h3 class="panel-corner">AI</h3>
+          <div class="canvas-frame">
+            <canvas data-canvas="race-ai"></canvas>
+            <div class="hud" data-hud="race-ai">
+              <div class="hud-row"><span class="hud-key">T</span><span class="hud-val" data-hud-key="T">—</span><span class="hud-unit">keV</span></div>
+              <div class="hud-row"><span class="hud-key">n</span><span class="hud-val" data-hud-key="n">—</span><span class="hud-unit">×10²⁰ m⁻³</span></div>
+              <div class="hud-row"><span class="hud-key">P_fus</span><span class="hud-val" data-hud-key="P">—</span><span class="hud-unit">MW</span></div>
+            </div>
+            <div class="status-banner" data-status="race-ai">Idle</div>
+            <div class="timer-overlay small">
+              <span class="timer-label">survival</span>
+              <span class="timer" data-timer="race-ai">0.00 s</span>
+              <span class="timer-label">reward</span>
+              <span class="timer accent" data-reward="race-ai">0.0</span>
+            </div>
+          </div>
+          <div class="race-controls">
+            <button data-action="race-start" class="primary">▶ Start race</button>
+            <button data-action="race-reset" class="ghost">Reset</button>
+          </div>
+        </div>
+      </div>
+      <div class="policy-strip glass" data-policy-summary>
+        <div class="summary-label">Standard reference</div>
+        <div class="summary-loading">Loading trajectory metrics...</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      Inspired by Degrave 2022 · Seo 2024 · Tracey 2024.
+      FusionPilot is a simplified educational simulator — <strong>not</strong> a real tokamak controller.
+    </p>
+  </footer>
+
+  <script type="module" src="./app/main.js"></script>
+</body>
+</html>
