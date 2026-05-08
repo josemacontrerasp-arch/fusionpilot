@@ -1,8 +1,8 @@
 # FusionPilot Devpost Submission Packet
 
-This file is the judge-ready Devpost copy for FusionPilot. It includes every
-required field from the hackathon brief, plus a final upload checklist for the
-screenshots/video that will be added on Devpost.
+This file is the judge-ready written Devpost copy for FusionPilot. It includes
+the required written fields from the hackathon brief. Screenshots and video are
+uploaded directly on Devpost and are intentionally not stored in this repo.
 
 ## Project Title
 
@@ -94,29 +94,6 @@ non-experts understand plasma instability and AI-assisted control, it can
 increase curiosity around fusion energy, AI-for-science, and the engineering
 needed for future low-carbon power systems.
 
-## Project Files
-
-At least one file showing functionality or design should be uploaded directly to
-Devpost. The repo already contains the runnable project; the final submission
-should add the media files below on Devpost.
-
-Recommended uploads:
-
-- Screenshot of **Learn Mode** showing the particle plasma torus and sliders.
-- Screenshot of **Operator Challenge** during random actuator drift.
-- Screenshot of **AI vs You** with `trained (best available)` selected.
-- Screenshot of the **settings popover** showing difficulty and reactor
-  scenarios.
-- Short 30-60 second demo video showing:
-  - Learn Mode slider response.
-  - Operator Challenge failure and failure theory.
-  - AI vs You race with trained SAC selected.
-  - Scenario switching between Standard, Storm, Compact, Heavy, or Precision.
-
-Suggested demo video hook:
-
-> Want to compete against an AI to stabilize the fourth state of matter?
-
 ## Project Link / Repository
 
 Repository:
@@ -193,5 +170,4 @@ FusionPilot uses two kinds of AI:
 - [x] Repository link is included.
 - [x] Team details are included.
 - [x] Local run instructions are included.
-- [ ] Upload at least one screenshot or demo video to Devpost before final
-  submission.
+- [x] Screenshots and video are uploaded directly on Devpost.
