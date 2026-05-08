@@ -15,7 +15,6 @@ build/
 # Local assistant/design/submission working files. Keep these off GitHub.
 .claude/
 design-references/
-DEVPOST_SUBMISSION.md
 VIDEO_SCRIPT.md
 0[0-8]_*.md
 
